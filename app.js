@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const userRoutes = require('./routes/userRoutes.js');
 
 const app = express();
 
@@ -31,3 +32,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //session
 app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
+
+//routes
+app.use('/users', userRoutes);
+
+
+//404
+app.use((req,res)=>{
+  res.status(404).send("sth is wrong");
+})

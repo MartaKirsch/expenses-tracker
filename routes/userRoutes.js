@@ -7,4 +7,8 @@ router.post('/register', userController.register);
 
 router.post('/checkIfUsernameExists', userController.checkIfUsernameExists);
 
+router.post('/checkIfEmailIsUsed', userController.checkIfEmailIsUsed);
+
+router.post('/checkLogInData', userController.checkLogInData);
+
 module.exports = router;

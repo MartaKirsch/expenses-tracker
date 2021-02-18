@@ -67,9 +67,26 @@ const checkLogInData = (req, res) => {
   }).catch(err=>res.json({mssg:"error"}));
 };
 
+const isLoggedIn = (req, res) => {
+  let sess = req.session;
+  if(sess.user && sess.user!=="")
+  {
+    res.json({isLogged:true});
+  }
+  res.json({isLogged:false});
+};
+
+const logOut = (req, res) => {
+  let sess = req.session;
+  sess.user = null;
+  res.json({mssg:"logged out"});
+};
+
 module.exports={
   register,
   checkIfUsernameExists,
   checkIfEmailIsUsed,
   checkLogInData,
+  isLoggedIn,
+  logOut
 };

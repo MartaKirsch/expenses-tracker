@@ -11,4 +11,8 @@ router.post('/checkIfEmailIsUsed', userController.checkIfEmailIsUsed);
 
 router.post('/checkLogInData', userController.checkLogInData);
 
+
+router.get('/isLoggedIn', userController.isLoggedIn);
+router.get('/logOut', userController.logOut);
+
 module.exports = router;

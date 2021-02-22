@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes.js');
+const expensesRoutes = require('./routes/expensesRoutes.js');
 
 const app = express();
 
@@ -35,7 +36,7 @@ app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
 
 //routes
 app.use('/users', userRoutes);
-
+app.use('/expenses',expensesRoutes);
 
 //404
 app.use((req,res)=>{

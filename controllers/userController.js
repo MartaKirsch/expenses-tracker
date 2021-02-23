@@ -1,5 +1,6 @@
 const session = require('express-session');
 const User = require('../models/userModel.js');
+const Expense = require('../models/expenseModel.js');
 
 const register = (req, res) => {
   let sess = req.session;
@@ -55,16 +56,20 @@ const checkLogInData = (req, res) => {
     {
       sess.user = req.body.username;
       res.json({mssg:"ok"});
-    }
-    User.findOne({username_lowercase:req.body.username.toLowerCase()}).then(doc=>{
-      if(doc)
-      {
-        res.json({mssg:"password"});
-      }
-      res.json({mssg:"username"})
-    }).catch(err=>res.json({mssg:"error"}));
+    } else {
+      User.findOne({username_lowercase:req.body.username.toLowerCase()}).then(doc=>{
+        if(doc)
+        {
+          res.json({mssg:"password"});
+        }
+        else
+        {
+          res.json({mssg:"username"});
+        }
 
-  }).catch(err=>res.json({mssg:"error"}));
+      }).catch(err=>console.log(err));
+    }
+  }).catch(err=>console.log(err));
 };
 
 const isLoggedIn = (req, res) => {
@@ -73,7 +78,9 @@ const isLoggedIn = (req, res) => {
   {
     res.json({isLogged:true});
   }
-  res.json({isLogged:false});
+  else{
+    res.json({isLogged:false});
+  }
 };
 
 const logOut = (req, res) => {
@@ -82,11 +89,36 @@ const logOut = (req, res) => {
   res.json({mssg:"logged out"});
 };
 
+const load = (req, res) => {
+  let sess = req.session;
+
+  const {date,type,phrase} = req.body;
+  console.log(date, type, phrase, sess.user);
+
+  if(!date){
+    Expense.find({username:sess.user.toLowerCase()}).then(docs=>{
+      res.json(docs);
+    }).catch(err=>{
+      res.status(502).json({loaded:false});
+    });
+  }
+
+  else {
+    Expense.find({username:sess.user.toLowerCase(),type:type,phrase:phrase}).sort({date}).then(docs=>{
+      res.json(docs);
+    }).catch(err=>{
+      res.status(502).json({loaded:false});
+    });
+  }
+
+};
+
 module.exports={
   register,
   checkIfUsernameExists,
   checkIfEmailIsUsed,
   checkLogInData,
   isLoggedIn,
-  logOut
+  logOut,
+  load
 };

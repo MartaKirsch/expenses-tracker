@@ -55,8 +55,41 @@ const load = (req, res) => {
 
 };
 
+const checkExpense = (req, res) => {
+  let sess = req.session;
+
+  Expense.findOne({_id:req.params.id}).then(doc=>{
+    if(doc.username===sess.user)
+    {
+      res.json({isOk:true});
+    } else {
+      res.json({isOk:false});
+    }
+  }).catch(err=>{
+    res.status(502).json({isOk:false});
+  })
+};
+
+const get = (req, res) => {
+  Expense.findOne({_id:req.params.id}).then(doc=>{
+    res.json({exp:doc});
+  }).catch(err=>{
+    res.status(502).json({isOk:false});
+  })
+};
+
+const update = (req, res) => {
+  Expense.findOneAndUpdate({_id:req.params.id},req.body.data).then(doc=>{
+    res.json({updated:true});
+  }).catch(err=>{
+    res.status(502).json({updated:false});
+  })
+};
 
 module.exports={
   add,
-  load
+  load,
+  checkExpense,
+  get,
+  update
 };

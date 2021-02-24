@@ -10,4 +10,6 @@ router.post('/add', expensesController.add);
 router.post('/update/:id', expensesController.update);
 router.post('/load', expensesController.load);
 
+router.delete('/:id',expensesController.deleteExp);
+
 module.exports = router;

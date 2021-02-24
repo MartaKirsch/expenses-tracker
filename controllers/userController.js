@@ -1,6 +1,5 @@
 const session = require('express-session');
 const User = require('../models/userModel.js');
-const Expense = require('../models/expenseModel.js');
 
 const register = (req, res) => {
   let sess = req.session;
@@ -89,29 +88,6 @@ const logOut = (req, res) => {
   res.json({mssg:"logged out"});
 };
 
-const load = (req, res) => {
-  let sess = req.session;
-
-  const {date,type,phrase} = req.body;
-  console.log(date, type, phrase, sess.user);
-
-  if(!date){
-    Expense.find({username:sess.user.toLowerCase()}).then(docs=>{
-      res.json(docs);
-    }).catch(err=>{
-      res.status(502).json({loaded:false});
-    });
-  }
-
-  else {
-    Expense.find({username:sess.user.toLowerCase(),type:type,phrase:phrase}).sort({date}).then(docs=>{
-      res.json(docs);
-    }).catch(err=>{
-      res.status(502).json({loaded:false});
-    });
-  }
-
-};
 
 module.exports={
   register,
@@ -119,6 +95,5 @@ module.exports={
   checkIfEmailIsUsed,
   checkLogInData,
   isLoggedIn,
-  logOut,
-  load
+  logOut
 };

@@ -86,10 +86,19 @@ const update = (req, res) => {
   })
 };
 
+const deleteExp = (req, res) => {
+  Expense.deleteOne({_id:req.params.id}).then(doc=>{
+    res.json({deleted:true});
+  }).catch(err=>{
+    res.status(502).json({deleted:false});
+  })
+};
+
 module.exports={
   add,
   load,
   checkExpense,
   get,
-  update
+  update,
+  deleteExp
 };

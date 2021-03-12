@@ -88,6 +88,37 @@ const logOut = (req, res) => {
   res.json({mssg:"logged out"});
 };
 
+const userData = (req, res) => {
+  let sess = req.session;
+
+  if(!sess.user || sess.user==="")
+  {
+    res.status(502);
+  } else {
+
+    User.findOne({username_lowercase:sess.user.toLowerCase()}).then(doc=>{
+
+      let d = doc.createdAt.getDate();
+      let m = doc.createdAt.getMonth()+1;
+      let y = doc.createdAt.getFullYear();
+
+      if(parseInt(d)<10)
+      {
+        d=`0${d}`;
+      }
+      if(parseInt(m)<10)
+      {
+        m=`0${m}`;
+      }
+
+      const datestr = `${d}-${m}-${y}`;
+      res.json({username:sess.user, date:datestr});
+    }).catch(err=>{
+      res.status(502);
+    })
+  }
+};
+
 
 module.exports={
   register,
@@ -95,5 +126,6 @@ module.exports={
   checkIfEmailIsUsed,
   checkLogInData,
   isLoggedIn,
-  logOut
+  logOut,
+  userData
 };

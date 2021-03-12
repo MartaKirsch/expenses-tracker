@@ -9,6 +9,7 @@ router.get('/get/:id', expensesController.get);
 router.post('/add', expensesController.add);
 router.post('/update/:id', expensesController.update);
 router.post('/load', expensesController.load);
+router.post('/piechart', expensesController.piechart);
 
 router.delete('/:id',expensesController.deleteExp);
 

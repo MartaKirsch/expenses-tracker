@@ -94,11 +94,52 @@ const deleteExp = (req, res) => {
   })
 };
 
+const piechart = (req, res) => {
+
+  let username = req.session.user.toLowerCase();
+  let types = req.body.types;
+  const from = req.body.from;
+  const to = req.body.to;
+
+  let date_filter = {};
+
+  if(from && from !=="")
+  {
+    date_filter.date = {
+      $gte: from
+    };
+  }
+  if(to && to !=="")
+  {
+    date_filter.date = {
+      ...date_filter.date,
+      $lte: to
+    };
+  }
+
+  Expense.find({type:types, username:username, ...date_filter }).then(docs=>{
+    let data = {};
+
+    types.forEach(type => {
+      data[type]=0;
+    });
+
+    docs.forEach(doc => {
+      data[doc.type] += doc.price;
+    });
+
+    res.json(data);
+  }).catch(err=>{
+    res.status(502).json({isOk:false});
+  });
+};
+
 module.exports={
   add,
   load,
   checkExpense,
   get,
   update,
-  deleteExp
+  deleteExp,
+  piechart
 };

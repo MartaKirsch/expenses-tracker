@@ -32,7 +32,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //session
-app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
+// app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
+app.set('trust proxy', 1);
+
+app.use(session({
+cookie:{
+    secure: true,
+    maxAge:60000
+       },
+store: new RedisStore(),
+secret: 'secret',
+saveUninitialized: true,
+resave: false
+}));
+
+app.use(function(req,res,next){
+if(!req.session){
+    return next(new Error('Oh no')) //handle error
+}
 
 //routes
 app.use('/users', userRoutes);

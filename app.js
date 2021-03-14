@@ -29,6 +29,9 @@ mongoose.connect(dbURI,{ useNewUrlParser: true, useUnifiedTopology: true })
   .then((result)=>{console.log('connected to db');app.listen(port);})
   .catch((err)=>console.log('there is an error: '+err));
 
+
+app.use(express.static('client/build'));
+
 //use body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

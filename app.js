@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes.js');
 const expensesRoutes = require('./routes/expensesRoutes.js');
+const MongoStore = require('connect-mongo');
 
 const app = express();
 
@@ -17,7 +18,7 @@ if (port == null || port == "") {
 }
 else
 {
-  dbURI = process.env.MONGODB_URI;
+  dbURI = process.env.DBURI;
 }
 
 dbURI = process.env.DBURI;
@@ -32,7 +33,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //session
-app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
+// app.use(session({secret: 'ssshhhhh', resave:true, saveUninitialized: false}));
+app.use(session({
+  secret: 'pandeuek',
+  saveUninitialized: false,
+  resave: false,
+  store: MongoStore.create({mongoUrl: dbURI, ttl:60*60*24})
+}));
 
 //routes
 app.use('/users', userRoutes);

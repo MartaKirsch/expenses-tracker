@@ -135,6 +135,36 @@ const piechart = (req, res) => {
   });
 };
 
+const barchart = (req,res) => {
+
+  const {from,to} = req.body;
+
+  const username = req.session.user.toLowerCase();
+  const date = {
+    $gte: from,
+    $lte:to
+  };
+
+  Expense.find({username, date }).sort({date: 1}).then(docs=>{
+    const months = ['Jan','Feb','Mar',"Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    let data = {'Jan':0,'Feb':0,'Mar':0,"Apr":0,"May":0,"Jun":0,"Jul":0,"Aug":0,"Sep":0,"Oct":0,"Nov":0,"Dec":0};
+
+    docs.forEach(doc=>{
+      const m = new Date(doc.date).getMonth();
+      data[months[m]]+=doc.price;
+    });
+
+    for(let d in data)
+    {
+      data[d]=Math.round((data[d] + Number.EPSILON) * 100) / 100;
+    }
+
+    res.json(data);
+  }).catch(err=>{
+    res.status(502).json({isOk:false});
+  });
+};
+
 module.exports={
   add,
   load,
@@ -142,5 +172,6 @@ module.exports={
   get,
   update,
   deleteExp,
-  piechart
+  piechart,
+  barchart
 };

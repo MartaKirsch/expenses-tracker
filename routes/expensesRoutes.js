@@ -10,6 +10,7 @@ router.post('/add', expensesController.add);
 router.post('/update/:id', expensesController.update);
 router.post('/load', expensesController.load);
 router.post('/piechart', expensesController.piechart);
+router.post('/barchart', expensesController.barchart);
 
 router.delete('/:id',expensesController.deleteExp);
 

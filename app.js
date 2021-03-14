@@ -10,6 +10,9 @@ const MongoStore = require('connect-mongo');
 
 const app = express();
 
+//mongoose findOneAndUpdate depracation
+mongoose.set('useFindAndModify', false);
+
 //heroku stuff - port/db uri selection
 let port = process.env.PORT;
 let dbURI = process.env.DBURI;
@@ -26,7 +29,7 @@ dbURI = process.env.DBURI;
 
 //db connection
 mongoose.connect(dbURI,{ useNewUrlParser: true, useUnifiedTopology: true })
-  .then((result)=>{console.log('connected to db');app.listen(port);})
+  .then((result)=>{console.log('connected to db');app.listen(port);console.log(`listening to port: ${port}`);})
   .catch((err)=>console.log('there is an error: '+err));
 
 app.use(express.static('client/build'));
@@ -54,5 +57,5 @@ app.use('/review',reviewRoutes);
 
 //404
 app.use((req,res)=>{
-  res.status(404).send("sth is wrong");
+  res.send('An error occured');
 })

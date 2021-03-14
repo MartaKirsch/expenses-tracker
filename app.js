@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes.js');
 const expensesRoutes = require('./routes/expensesRoutes.js');
+const reviewRoutes = require('./routes/reviewRoutes.js');
 const MongoStore = require('connect-mongo');
 
 const app = express();
@@ -38,12 +39,16 @@ app.use(session({
   secret: 'pandeuek',
   saveUninitialized: false,
   resave: false,
-  store: MongoStore.create({mongoUrl: dbURI, ttl:60*60*24})
+  store: MongoStore.create({
+    mongoUrl: dbURI,
+    clear_interval: 3600,
+    ttl:60*60*24})
 }));
 
 //routes
 app.use('/users', userRoutes);
 app.use('/expenses',expensesRoutes);
+app.use('/review',reviewRoutes);
 
 //404
 app.use((req,res)=>{

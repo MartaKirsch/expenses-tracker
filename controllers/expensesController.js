@@ -26,7 +26,7 @@ const add = (req, res) => {
 const load = (req, res) => {
   let sess = req.session;
 
-  const {date,type,phrase} = req.body;
+  const { date,type,phrase,howMany } = req.body;
   const filters = {};
 
   if(type && type!=="")
@@ -38,7 +38,11 @@ const load = (req, res) => {
   console.log(filters,phrase);
 
   if(!date){
-    Expense.find({username:sess.user.toLowerCase()}).sort({date:-1}).then(docs=>{
+    Expense.find({username:sess.user.toLowerCase()})
+    .sort({date:-1})
+    .skip(parseInt(howMany))
+    .limit(10)
+    .then(docs=>{
       res.json(docs);
     }).catch(err=>{
       res.status(502).json({loaded:false});
@@ -46,7 +50,11 @@ const load = (req, res) => {
   }
 
   else{
-    Expense.find({username:sess.user.toLowerCase(), ...filters}).sort({date}).then(docs=>{
+    Expense.find({username:sess.user.toLowerCase(), ...filters})
+    .sort({date})
+    .skip(parseInt(howMany))
+    .limit(10)
+    .then(docs=>{
       console.log(docs);
       res.json(docs);
     }).catch(err=>{
